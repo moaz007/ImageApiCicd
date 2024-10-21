@@ -1,0 +1,44 @@
+service: s3-image-processing
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  tracing:
+    lambda: true
+    apiGateway: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+        - s3:ListBucket
+      Resource:
+        - arn:aws:s3:::s3-image-processing-api
+        - arn:aws:s3:::s3-image-processing-api/*
+
+functions:
+  uploadImage:
+    handler: handler.uploadImage
+    events:
+      - http:
+          path: upload
+          method: post
+          cors: true
+
+  processImage:
+    handler: handler.processImage
+    events:
+      - s3:
+          bucket: s3-image-processing-api
+          event: s3:ObjectCreated:Put
+          rules:
+            - prefix: uploads/
+
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        Name: "s3-image-processing-api"
+
