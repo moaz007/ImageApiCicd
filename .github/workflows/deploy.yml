@@ -1,0 +1,41 @@
+name: Deploy to AWS Lambda
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Serverless
+        run: npm install -g serverless
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: your-region
+
+      - name: Deploy Lambda function
+        run: |
+          start_time=$(date +%s)
+          serverless deploy
+          end_time=$(date +%s)
+          echo "Deployment time: $((end_time - start_time)) seconds"
+
+      - name: Monitor Lambda cold/warm start
+        run: |
+          aws logs describe-log-streams --log-group-name "/aws/lambda/image-processing-processImage"
+          aws logs get-log-events --log-group-name "/aws/lambda/image-processing-processImage" --log-stream-name YOUR_LOG_STREAM
