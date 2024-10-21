@@ -45,5 +45,6 @@ jobs:
       # Step 6: Retrieve Lambda logs for cold/warm start monitoring
       - name: Monitor Lambda cold/warm start
         run: |
-          aws logs describe-log-streams --log-group-name "/aws/lambda/image-processing-processImage"
-          aws logs get-log-events --log-group-name "/aws/lambda/image-processing-processImage" --log-stream-name YOUR_LOG_STREAM
+          aws logs describe-log-streams --log-group-name "/aws/lambda/s(/aws/lambda/s3-image-processing-dev-processImage"
+          aws logs get-log-events --log-group-name "/aws/lambda/s3-image-processing-dev-processImage" --log-stream-name "2024/10/19/[$LATEST]bbe0d6526f2a4a2e81ab51ce6bb12f06"
+
