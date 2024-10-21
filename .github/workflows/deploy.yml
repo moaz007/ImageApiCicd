@@ -40,6 +40,8 @@ jobs:
           serverless deploy
           end_time=$(date +%s)
           echo "Deployment time: $((end_time - start_time)) seconds"
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
 
       - name: Monitor Lambda cold/warm start
         run: |
